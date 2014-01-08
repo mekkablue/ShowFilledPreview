@@ -1,4 +1,4 @@
-# ShowAngledHandles.glyphsReporter
+# ShowFilledPreview.glyphsReporter
 
 This is a plugin for the [Glyphs font editor](http://glyphsapp.com/) by Georg Seifert.
 It fills open paths with a dark gray color even while you are still drawing.
