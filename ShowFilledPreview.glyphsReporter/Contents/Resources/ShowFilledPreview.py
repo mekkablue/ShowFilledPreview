@@ -6,6 +6,13 @@ from Foundation import *
 from AppKit import *
 import sys, os, re
 
+MainBundle = NSBundle.mainBundle()
+path = MainBundle.bundlePath()+"/Contents/Scripts"
+if not path in sys.path:
+	sys.path.append(path)
+
+import GlyphsApp
+
 GlyphsReporterProtocol = objc.protocolNamed( "GlyphsReporter" )
 
 class ShowFilledPreview ( NSObject, GlyphsReporterProtocol ):
@@ -21,8 +28,7 @@ class ShowFilledPreview ( NSObject, GlyphsReporterProtocol ):
 		This is the name as it appears in the menu in combination with 'Show'.
 		E.g. 'return "Nodes"' will make the menu item read "Show Nodes".
 		"""
-		return NSString.stringWithString_( "Filled Preview while Editing" )
-		# return "Filled Preview while Editing"
+		return "Filled Preview while Editing"
 		
 	def interfaceVersion( self ):
 		"""
@@ -35,7 +41,7 @@ class ShowFilledPreview ( NSObject, GlyphsReporterProtocol ):
 		The variable 'message' will be passed to Console.app.
 		Use self.logToConsole( "bla bla" ) for debugging.
 		"""
-		myLog = NSString.stringWithString_( "Show %s plugin:\n%s" % ( self.title(), message ) )
+		myLog = "Show %s plugin:\n%s" % ( self.title(), message )
 		NSLog( myLog )
 		
 	def keyEquivalent( self ):
