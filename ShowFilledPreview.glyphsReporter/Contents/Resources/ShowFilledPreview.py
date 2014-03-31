@@ -7,9 +7,9 @@ from AppKit import *
 import sys, os, re
 
 MainBundle = NSBundle.mainBundle()
-path = MainBundle.bundlePath()+"/Contents/Scripts"
+path = MainBundle.bundlePath() + "/Contents/Scripts"
 if not path in sys.path:
-	sys.path.append(path)
+	sys.path.append( path )
 
 import GlyphsApp
 
@@ -34,7 +34,10 @@ class ShowFilledPreview ( NSObject, GlyphsReporterProtocol ):
 		"""
 		Must return 1.
 		"""
-		return 1
+		try:
+			return 1
+		except Exception as e:
+			self.logToConsole( "interfaceVersion: %s" % str(e) )
 		
 	def logToConsole( self, message ):
 		"""
@@ -50,7 +53,10 @@ class ShowFilledPreview ( NSObject, GlyphsReporterProtocol ):
 		Pretty tricky to find a shortcut that is not taken yet, so be careful.
 		If you are not sure, use 'return None'. Users can set their own shortcuts in System Prefs.
 		"""
-		return None
+		try:
+			return None
+		except Exception as e:
+			self.logToConsole( "keyEquivalent: %s" % str(e) )
 		
 	def modifierMask( self ):
 		"""
@@ -60,7 +66,10 @@ class ShowFilledPreview ( NSObject, GlyphsReporterProtocol ):
 			return 0
 		... if you do not want to set a shortcut.
 		"""
-		return 0
+		try:
+			return 0
+		except Exception as e:
+			self.logToConsole( "modifierMask: %s" % str(e) )
 		
 	def drawForegroundForLayer_( self, Layer ):
 		"""
@@ -69,7 +78,7 @@ class ShowFilledPreview ( NSObject, GlyphsReporterProtocol ):
 		try:
 			pass
 		except Exception as e:
-			self.logToConsole( str(e) )
+			self.logToConsole( "drawForegroundForLayer_: %s" % str(e) )
 		
 	def drawBackgroundForLayer_( self, Layer ):
 		"""
@@ -93,7 +102,7 @@ class ShowFilledPreview ( NSObject, GlyphsReporterProtocol ):
 					pass # Layer.openBezierPath() is None
 				
 		except Exception as e:
-			self.logToConsole( str(e) )
+			self.logToConsole( "drawBackgroundForLayer_: %s" % str(e) )
 			
 	def drawBackgroundForInactiveLayer_( self, Layer ):
 		"""
@@ -102,10 +111,13 @@ class ShowFilledPreview ( NSObject, GlyphsReporterProtocol ):
 		try:
 			pass
 		except Exception as e:
-			self.logToConsole( str(e) )
+			self.logToConsole( "drawBackgroundForInactiveLayer_: %s" % str(e) )
 			
 	def setController_( self, Controller ):
 		"""
 		Use self.controller as object for the current view controller.
 		"""
-		self.controller = Controller
+		try:
+			self.controller = Controller
+		except Exception as e:
+			self.logToConsole( "setController_: %s" % str(e) )
