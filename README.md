@@ -18,6 +18,10 @@ You can set a keyboard shortcut in System Preferences.
 1. Open a glyph in Edit View.
 2. Use *View > Show Show Filled Preview while Editing* to toggle the the Filled Preview.
 
+### Requirements
+
+The plugin needs Glyphs 1.4.3 or higher, running on OS X 10.7 or later. I can only test it in current OS versions, and I assume it will not work in versions of Mac OS X older than 10.7.
+
 ### License
 
 Copyright 2014 Rainer Erich Scheichelbauer (@mekkablue).
