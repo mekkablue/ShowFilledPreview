@@ -17,11 +17,14 @@ GlyphsReporterProtocol = objc.protocolNamed( "GlyphsReporter" )
 
 class ShowFilledPreview ( NSObject, GlyphsReporterProtocol ):
 	
-	#def init( self ):
-	#	"""
-	#	Unless you know what you are doing, leave this at "return self".
-	#	"""
-	#	return self
+	def init( self ):
+		"""
+		Put any initializations you want to make here.
+		"""
+		try:
+			return self
+		except Exception as e:
+			self.logToConsole( "init: %s" % str(e) )
 		
 	def title( self ):
 		"""
@@ -38,14 +41,6 @@ class ShowFilledPreview ( NSObject, GlyphsReporterProtocol ):
 			return 1
 		except Exception as e:
 			self.logToConsole( "interfaceVersion: %s" % str(e) )
-		
-	def logToConsole( self, message ):
-		"""
-		The variable 'message' will be passed to Console.app.
-		Use self.logToConsole( "bla bla" ) for debugging.
-		"""
-		myLog = "Show %s plugin:\n%s" % ( self.title(), message )
-		NSLog( myLog )
 		
 	def keyEquivalent( self ):
 		"""
@@ -79,14 +74,9 @@ class ShowFilledPreview ( NSObject, GlyphsReporterProtocol ):
 			pass
 		except Exception as e:
 			self.logToConsole( "drawForegroundForLayer_: %s" % str(e) )
-		
-	def drawBackgroundForLayer_( self, Layer ):
-		"""
-		Whatever you draw here will be displayed BEHIND the paths.
-		"""
+	
+	def drawLayerOpenOrClosed( self, Layer ):
 		try:
-			NSColor.darkGrayColor().set()
-			
 			if len( Layer.paths ) > 0:
 				try:
 					Layer.bezierPath().fill()
@@ -100,10 +90,39 @@ class ShowFilledPreview ( NSObject, GlyphsReporterProtocol ):
 					# please report if ghost paths still occur
 				except:
 					pass # Layer.openBezierPath() is None
-				
+		except Exception as e:
+			self.logToConsole( "drawLayerOpenOrClosed: %s" % str(e) )
+			
+	
+	def drawBackgroundForLayer_( self, Layer ):
+		"""
+		Whatever you draw here will be displayed BEHIND the paths.
+		"""
+		try:
+			NSColor.darkGrayColor().set()
+			self.drawLayerOpenOrClosed( Layer )
 		except Exception as e:
 			self.logToConsole( "drawBackgroundForLayer_: %s" % str(e) )
 			
+	def needsExtraMainOutlineDrawingForInactiveLayer_( self, Layer ):
+		"""
+		Whatever you draw here will be displayed in the Preview at the bottom.
+		Remove the method or return True if you want to leave the Preview untouched.
+		Return True to leave the Preview as it is and draw on top of it.
+		Return False to disable the Preview and draw your own.
+		In that case, don't forget to add Bezier methods like in drawForegroundForLayer_(),
+		otherwise users will get an empty Preview.
+		"""
+		try:
+			if NSUserDefaults.standardUserDefaults().boolForKey_("GSPreview_Black"):
+				NSColor.whiteColor().set()
+			else:
+				NSColor.blackColor().set()
+			self.drawLayerOpenOrClosed( Layer )
+			return False
+		except Exception as e:
+			return True
+	
 	def drawBackgroundForInactiveLayer_( self, Layer ):
 		"""
 		Whatever you draw here will be displayed behind the paths, but for inactive masters.
@@ -121,3 +140,12 @@ class ShowFilledPreview ( NSObject, GlyphsReporterProtocol ):
 			self.controller = Controller
 		except Exception as e:
 			self.logToConsole( "setController_: %s" % str(e) )
+		
+	def logToConsole( self, message ):
+		"""
+		The variable 'message' will be passed to Console.app.
+		Use self.logToConsole( "bla bla" ) for debugging.
+		"""
+		myLog = "Show %s plugin:\n%s" % ( self.title(), message )
+		print myLog
+		NSLog( myLog )
