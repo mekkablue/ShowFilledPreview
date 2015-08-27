@@ -114,11 +114,6 @@ class ShowFilledPreview ( NSObject, GlyphsReporterProtocol ):
 		otherwise users will get an empty Preview.
 		"""
 		try:
-			if NSUserDefaults.standardUserDefaults().boolForKey_("GSPreview_Black"):
-				NSColor.whiteColor().set()
-			else:
-				NSColor.blackColor().set()
-			self.drawLayerOpenOrClosed( Layer )
 			return False
 		except Exception as e:
 			return True
@@ -128,7 +123,22 @@ class ShowFilledPreview ( NSObject, GlyphsReporterProtocol ):
 		Whatever you draw here will be displayed behind the paths, but for inactive masters.
 		"""
 		try:
-			pass
+			# Color for INACTIVE GLYPH IN EDIT VIEW
+			if self.controller:
+				# set the drawing color to black:
+				NSColor.blackColor().set()
+
+			# Color for GLYPH IN PREVIEW:	
+			else:
+				# check for background color (can be black or white):
+				if NSUserDefaults.standardUserDefaults().boolForKey_("GSPreview_Black"):
+					# set the drawing color to white if preview background is black:
+					NSColor.whiteColor().set()
+				else:
+					# set the drawing color to black if preview background is white:
+					NSColor.blackColor().set()
+			
+			self.drawLayerOpenOrClosed( Layer )
 		except Exception as e:
 			self.logToConsole( "drawBackgroundForInactiveLayer_: %s" % str(e) )
 			
