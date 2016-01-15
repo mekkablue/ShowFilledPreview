@@ -74,12 +74,19 @@ class ShowFilledPreview ( NSObject, GlyphsReporterProtocol ):
 			pass
 		except Exception as e:
 			self.logToConsole( "drawForegroundForLayer_: %s" % str(e) )
-	
+
+	def bezierPathComp( self, thisPath ):
+		"""Compatibility method for bezierPath before v2.3."""
+		try:
+			return thisPath.bezierPath() # until v2.2
+		except Exception as e:
+			return thisPath.bezierPath # v2.3+
+
 	def drawLayerOpenOrClosed( self, Layer ):
 		try:
 			if len( Layer.paths ) > 0:
 				try:
-					Layer.bezierPath().fill()
+					self.bezierPathComp(Layer).fill()
 				except:
 					pass # Layer.bezierPath() is None
 				
