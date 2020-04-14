@@ -1,68 +1,66 @@
 # encoding: utf-8
+from __future__ import division, print_function, unicode_literals
 
 ###########################################################################################################
-#
 #
 #	Reporter Plugin
 #
 #	Read the docs:
 #	https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates/Reporter
 #
-#
 ###########################################################################################################
-
 
 from GlyphsApp.plugins import *
 
 class ShowFilledPreview(ReporterPlugin):
-
+	@objc.python_method
 	def settings(self):
 		self.menuName = Glyphs.localize({
 			'en': u'Filled Preview while Editing', 
-			'de': u'Gefüllte Vorschau beim Bearbeiten'
+			'de': u'Gefüllte Vorschau beim Bearbeiten',
+			'es': u'contornos rellenos durante la edición',
+			'fr': u'aperçu des formes pendant la édition',
 		})
 
-	def drawLayerOpenOrClosed( self, Layer ):
+	@objc.python_method
+	def drawLayerOpenOrClosed( self, layer ):
 		try:
-			if len( Layer.paths ) > 0:
+			if layer.paths:
 				try:
-					Layer.bezierPath.fill()
+					layer.bezierPath.fill()
 				except:
-					pass # Layer.bezierPath() is None
-				
+					pass
 				try:
-					Layer.openBezierPath.fill()
-					# sometimes leaves traces (ghost paths) after deletion
-					# the if statement above should fix this
-					# please report if ghost paths still occur
+					layer.openBezierPath.fill()
 				except:
-					pass # Layer.openBezierPath is None
+					pass
+					
+			for component in layer.components:
+				# component.bezierPath.fill() # already included in layer.bezierPath 
+				component.openBezierPath().fill()
 		except Exception as e:
+			import traceback
+			print(traceback.format_exc())
 			self.logToConsole( "drawLayerOpenOrClosed: %s" % str(e) )
 		
+	@objc.python_method
 	def background(self, layer):
-		NSColor.darkGrayColor().set()
+		NSColor.disabledControlTextColor().set()
 		self.drawLayerOpenOrClosed( layer )
 
+	@objc.python_method
+	def inactiveLayerForeground(self, layer):
+		NSColor.controlTextColor().set()
+		self.drawLayerOpenOrClosed( layer )
+
+	@objc.python_method
 	def preview(self, layer):
-		if NSUserDefaults.standardUserDefaults().boolForKey_("GSPreview_Black"):
-			# set the drawing color to white if preview background is black:
+		if Glyphs.defaults["GSPreview_Black"]:
 			NSColor.whiteColor().set()
 		else:
-			# set the drawing color to black if preview background is white:
 			NSColor.blackColor().set()
-		
-		if layer.paths:
-			layer.bezierPath.fill()
-			layer.openBezierPath.fill()
-		if layer.components:
-			for component in layer.components:
-				component.bezierPath.fill()
+		self.drawLayerOpenOrClosed(layer)
 
-	def inactiveLayers(self, layer):
-		NSColor.blackColor().set()
-		layer.openBezierPath.fill()
-	
-	def needsExtraMainOutlineDrawingForInactiveLayer_(self, layer):
-		return True
-	
+	@objc.python_method
+	def needsExtraMainOutlineDrawingForInactiveLayer_(self, layer=None):
+		return True	
