@@ -13,19 +13,17 @@
 	<key>CFBundleName</key>
 	<string>ShowFilledPreview</string>
 	<key>CFBundleVersion</key>
-	<string>9</string>
+	<string>10</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.0</string>
+	<string>2.0.1</string>
 	<key>UpdateFeedURL</key>
 	<string>https://raw.githubusercontent.com/mekkablue/ShowFilledPreview/master/ShowFilledPreview.glyphsReporter/Contents/Info.plist</string>
 	<key>productPageURL</key>
 	<string>https://github.com/mekkablue/ShowFilledPreview</string>
 	<key>productReleaseNotes</key>
-	<string>Glyphs 3 compatibility.</string>
+	<string>Updated plugin binary.</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright, Rainer Erich Scheichelbauer, 2014-2016</string>
-	<key>NSMainNibFile</key>
-	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>ShowFilledPreview</string>
 	<key>PyMainFileNames</key>
