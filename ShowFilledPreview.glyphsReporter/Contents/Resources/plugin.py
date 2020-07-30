@@ -21,6 +21,15 @@ class ShowFilledPreview(ReporterPlugin):
 			'es': u'contornos rellenos durante la edición',
 			'fr': u'aperçu des formes pendant la édition',
 		})
+		Glyphs.registerDefault( "com.mekkablue.ShowFilledPreview.opacity", 1.0 )
+		try:
+			self.opacity = float( Glyphs.defaults["com.mekkablue.ShowFilledPreview.opacity"] )
+			if self.opacity < 0.0:
+				self.opacity = 0.0
+			elif self.opacity > 1.0:
+				self.opacity = 1.0
+		except:
+			self.opacity = 1.0
 
 	@objc.python_method
 	def drawLayerOpenOrClosed( self, layer ):
@@ -45,20 +54,21 @@ class ShowFilledPreview(ReporterPlugin):
 		
 	@objc.python_method
 	def background(self, layer):
-		NSColor.disabledControlTextColor().set()
+		NSColor.disabledControlTextColor().colorWithAlphaComponent_(self.opacity).set()
 		self.drawLayerOpenOrClosed( layer )
 
 	@objc.python_method
 	def inactiveLayerForeground(self, layer):
-		NSColor.controlTextColor().set()
+		NSColor.controlTextColor().colorWithAlphaComponent_(self.opacity).set()
 		self.drawLayerOpenOrClosed( layer )
 
 	@objc.python_method
 	def preview(self, layer):
 		if Glyphs.defaults["GSPreview_Black"]:
-			NSColor.whiteColor().set()
+			NSColor.whiteColor().colorWithAlphaComponent_(self.opacity).set()
 		else:
-			NSColor.blackColor().set()
+			NSColor.blackColor().colorWithAlphaComponent_(self.opacity).set()
+			
 		self.drawLayerOpenOrClosed(layer)
 
 	@objc.python_method

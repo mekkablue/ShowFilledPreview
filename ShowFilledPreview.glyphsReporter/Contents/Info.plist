@@ -13,15 +13,15 @@
 	<key>CFBundleName</key>
 	<string>ShowFilledPreview</string>
 	<key>CFBundleVersion</key>
-	<string>10</string>
+	<string>11</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.0.1</string>
+	<string>2.0.2</string>
 	<key>UpdateFeedURL</key>
 	<string>https://raw.githubusercontent.com/mekkablue/ShowFilledPreview/master/ShowFilledPreview.glyphsReporter/Contents/Info.plist</string>
 	<key>productPageURL</key>
 	<string>https://github.com/mekkablue/ShowFilledPreview</string>
 	<key>productReleaseNotes</key>
-	<string>Updated plugin binary.</string>
+	<string>Added alpha option: Glyphs.defaults["com.mekkablue.ShowFilledPreview.opacity"]=0.7 (thx @NicholasSloan)</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright, Rainer Erich Scheichelbauer, 2014-2016</string>
 	<key>NSPrincipalClass</key>
