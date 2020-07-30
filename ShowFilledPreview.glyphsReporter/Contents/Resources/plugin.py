@@ -22,18 +22,18 @@ class ShowFilledPreview(ReporterPlugin):
 			'fr': u'aperçu des formes pendant la édition',
 		})
 		Glyphs.registerDefault( "com.mekkablue.ShowFilledPreview.opacity", 1.0 )
-		try:
-			self.opacity = float( Glyphs.defaults["com.mekkablue.ShowFilledPreview.opacity"] )
-			if self.opacity < 0.0:
-				self.opacity = 0.0
-			elif self.opacity > 1.0:
-				self.opacity = 1.0
-		except:
-			self.opacity = 1.0
 
 	@objc.python_method
-	def drawLayerOpenOrClosed( self, layer ):
+	def drawLayerOpenOrClosed( self, layer, color ):
 		try:
+			self.opacity = float( Glyphs.defaults["com.mekkablue.ShowFilledPreview.opacity"] )
+			if self.opacity < 0.0 or self.opacity > 1.0:
+				raise ValueError
+		except:
+			Glyphs.defaults["com.mekkablue.ShowFilledPreview.opacity"] = self.opacity = 1.0
+		
+		try:
+			color.colorWithAlphaComponent_(self.opacity).set()
 			if layer.paths:
 				try:
 					layer.bezierPath.fill()
@@ -54,22 +54,18 @@ class ShowFilledPreview(ReporterPlugin):
 		
 	@objc.python_method
 	def background(self, layer):
-		NSColor.disabledControlTextColor().colorWithAlphaComponent_(self.opacity).set()
-		self.drawLayerOpenOrClosed( layer )
+		self.drawLayerOpenOrClosed( layer, NSColor.disabledControlTextColor() )
 
 	@objc.python_method
 	def inactiveLayerForeground(self, layer):
-		NSColor.controlTextColor().colorWithAlphaComponent_(self.opacity).set()
-		self.drawLayerOpenOrClosed( layer )
+		self.drawLayerOpenOrClosed( layer, NSColor.controlTextColor() )
 
 	@objc.python_method
 	def preview(self, layer):
 		if Glyphs.defaults["GSPreview_Black"]:
-			NSColor.whiteColor().colorWithAlphaComponent_(self.opacity).set()
+			self.drawLayerOpenOrClosed(layer, NSColor.whiteColor() )
 		else:
-			NSColor.blackColor().colorWithAlphaComponent_(self.opacity).set()
-			
-		self.drawLayerOpenOrClosed(layer)
+			self.drawLayerOpenOrClosed(layer, NSColor.blackColor() )
 
 	@objc.python_method
 	def needsExtraMainOutlineDrawingForInactiveLayer_(self, layer=None):
