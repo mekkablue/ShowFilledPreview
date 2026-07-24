@@ -10,7 +10,10 @@ from __future__ import division, print_function, unicode_literals
 #
 ###########################################################################################################
 
-from GlyphsApp.plugins import *
+import objc
+from GlyphsApp import Glyphs
+from GlyphsApp.plugins import ReporterPlugin
+from AppKit import NSColor
 
 class ShowFilledPreview(ReporterPlugin):
 	@objc.python_method
